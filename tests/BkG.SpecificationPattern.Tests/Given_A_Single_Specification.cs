@@ -1,4 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq.Expressions;
 
 namespace BkG.SpecificationPattern.Tests
 {
@@ -26,6 +28,15 @@ namespace BkG.SpecificationPattern.Tests
             var vSpecification = new Specification<bool>(testValue => testValue);
 
             Assert.IsFalse(vSpecification.IsSatisfiedBy(false), "Restriction that tests false should not satisfy the specification");
+        }
+
+        [TestMethod]
+        public void When_Needed_As_An_Expression_Then_The_Specification_Implicitly_Casts()
+        {
+            var vSpecification = new Specification<bool>(testValue => testValue);
+            Expression<Func<bool, bool>> vImplicitCast = vSpecification;
+
+            Assert.IsNotNull(vImplicitCast, "The specificaiton should implicitly cast back to an expression.");
         }
     }
 }

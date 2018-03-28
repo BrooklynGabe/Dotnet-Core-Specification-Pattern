@@ -12,6 +12,8 @@ namespace BkG.SpecificationPattern
         }
 
         public bool IsSatisfiedBy(T current) => _restriction.Compile()(current);
+
+        public static implicit operator Expression<Func<T, bool>>(Specification<T> specification) => specification._restriction;
         
         private readonly Expression<Func<T, bool>> _restriction;
     }
