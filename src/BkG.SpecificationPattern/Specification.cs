@@ -30,6 +30,14 @@ namespace BkG.SpecificationPattern
         public static Specification<T> operator &(Specification<T> specification, Specification<T> other) =>
             specification?.And(other) ?? throw new RequiredArgumentNullException(nameof(specification), "The first operand for an And statement cannot be null");
 
+        public Specification<T> Or(Specification<T> other) => 
+            other != null
+                    ? DoBinaryOperation(this, other, ExpressionType.OrElse)
+                    : throw new RequiredArgumentNullException(nameof(other), "The other operand for an Or statement cannot be null");
+
+        public static Specification<T> operator |(Specification<T> specification, Specification<T> other) =>
+            specification?.Or(other) ?? throw new RequiredArgumentNullException(nameof(specification), "The first operand for an Or statement cannot be null");
+
         private Specification<T> DoBinaryOperation(Specification<T> left, Specification<T> right, ExpressionType expressionType)
         {
             var vRightInvoked = Expression.Invoke(right._restriction, left._restriction.Parameters);
