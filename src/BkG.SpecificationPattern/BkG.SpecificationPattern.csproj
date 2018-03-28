@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <PackageId>BkG.Specification</PackageId>
+    <Authors>Brooklyn Gabe</Authors>
+    <Description>Lightweight expression wrapper specifically for testing when conditions are satisfied by current value.</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>dotnet core specification specification-pattern expression query where</PackageTags>
   </PropertyGroup>
 
 </Project>
