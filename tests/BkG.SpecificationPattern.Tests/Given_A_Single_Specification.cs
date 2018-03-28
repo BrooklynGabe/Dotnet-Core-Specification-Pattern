@@ -11,5 +11,21 @@ namespace BkG.SpecificationPattern.Tests
         {
             var vSpecification = new Specification<bool>(null);
         }
+
+        [TestMethod]
+        public void When_The_Restriction_Matches_Then_The_Specification_Is_Satisfied()
+        {
+            var vSpecification = new Specification<bool>(testValue => testValue);
+
+            Assert.IsTrue(vSpecification.IsSatisfiedBy(true), "Restriction that tests true should satisfy the specification");
+        }
+
+        [TestMethod]
+        public void When_The_Restriction_Does_Not_Match_Then_The_Specification_Is_Not_Satisfied()
+        {
+            var vSpecification = new Specification<bool>(testValue => testValue);
+
+            Assert.IsFalse(vSpecification.IsSatisfiedBy(false), "Restriction that tests false should not satisfy the specification");
+        }
     }
 }
