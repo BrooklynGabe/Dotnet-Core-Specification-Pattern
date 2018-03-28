@@ -14,6 +14,13 @@ namespace BkG.SpecificationPattern
         public bool IsSatisfiedBy(T current) => _restriction.Compile()(current);
 
         public static implicit operator Expression<Func<T, bool>>(Specification<T> specification) => specification._restriction;
+
+        public Specification<T> Not() =>
+            new Specification<T>(
+                Expression.Lambda<Func<T, bool>>(Expression.Not(_restriction.Body), _restriction.Parameters));
+
+        public static Specification<T> operator !(Specification<T> specification) => 
+            specification?.Not() ?? throw new RequiredArgumentNullException(nameof(specification), "Negating specification requires non-null reference");
         
         private readonly Expression<Func<T, bool>> _restriction;
     }
