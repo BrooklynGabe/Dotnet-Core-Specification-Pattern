@@ -7,7 +7,7 @@ namespace BkG.SpecificationPattern
     {
         public Specification(Expression<Func<T, bool>> restriction)
         {
-            _restriction = restriction 
+            _restriction = restriction
                             ?? throw new RequiredArgumentNullException(nameof(restriction), "The specification requires knowing what condition is to be met.");
         }
 
@@ -19,9 +19,24 @@ namespace BkG.SpecificationPattern
             new Specification<T>(
                 Expression.Lambda<Func<T, bool>>(Expression.Not(_restriction.Body), _restriction.Parameters));
 
-        public static Specification<T> operator !(Specification<T> specification) => 
+        public static Specification<T> operator !(Specification<T> specification) =>
             specification?.Not() ?? throw new RequiredArgumentNullException(nameof(specification), "Negating specification requires non-null reference");
-        
+
+        public Specification<T> And(Specification<T> other) => 
+            other != null
+                    ? DoBinaryOperation(this, other, ExpressionType.AndAlso)
+                    : throw new RequiredArgumentNullException(nameof(other), "The other operand for an And statement cannot be null");
+
+        public static Specification<T> operator &(Specification<T> specification, Specification<T> other) =>
+            specification?.And(other) ?? throw new RequiredArgumentNullException(nameof(specification), "The first operand for an And statement cannot be null");
+
+        private Specification<T> DoBinaryOperation(Specification<T> left, Specification<T> right, ExpressionType expressionType)
+        {
+            var vRightInvoked = Expression.Invoke(right._restriction, left._restriction.Parameters);
+            var vBinaryExpression = Expression.MakeBinary(expressionType, left._restriction.Body, vRightInvoked);
+            return new Specification<T>(Expression.Lambda<Func<T, bool>>(vBinaryExpression, left._restriction.Parameters));
+        }
+
         private readonly Expression<Func<T, bool>> _restriction;
     }
 }
